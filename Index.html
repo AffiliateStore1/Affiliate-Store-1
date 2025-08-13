@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>♥️ Affiliate Store 3D♥️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: #333;
+            overflow-x: hidden; /* Prevent horizontal scroll from animations */
+        }
+
+        /* 3D Style Enhancements */
+        .card-3d {
+            border-radius: 1rem;
+            overflow: hidden;
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            box-shadow: 10px 10px 20px #cbced1, -10px -10px 20px #ffffff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .card-3d::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #6a11cb, #2575fc, #6a11cb);
+            z-index: -1;
+            border-radius: 1.2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .card-3d:hover {
+            transform: translateY(-8px) rotateX(5deg) rotateY(2deg);
+            box-shadow: 15px 15px 30px #b8bdc1, -5px -5px 15px #ffffff;
+            background: linear-gradient(145deg, #f8f9fa, #e2e2e2);
+        }
+        .card-3d:hover::before {
+             opacity: 1;
+        }
+
+        .btn-3d {
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.25s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            padding: 0.75rem 1.5rem;
+            text-align: center;
+            display: inline-block;
+            transform: translateZ(10px);
+        }
+        .btn-3d:hover {
+            transform: translateY(-5px) translateZ(15px) scale(1.03);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+        }
+        .btn-3d:active {
+            transform: translateY(2px) translateZ(5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .btn-3d-primary { background: linear-gradient(45deg, #3b82f6, #1d4ed8); color: white; }
+        .btn-3d-secondary { background: linear-gradient(45deg, #10b981, #047857); color: white; }
+        .btn-3d-danger { background: linear-gradient(45deg, #ef4444, #b91c1c); color: white; }
+        .btn-3d-warning { background: linear-gradient(45deg, #f59e0b, #d97706); color: white; }
+        .btn-3d-gray { background: linear-gradient(45deg, #9ca3af, #6b7280); color: white; }
+
+        .input-3d {
+            border: 1px solid #d1d5db;
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+            box-shadow: inset 3px 3px 5px #cbced1, inset -3px -3px 5px #ffffff;
+            background-color: #f8f9fa;
+        }
+        .input-3d:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: inset 2px 2px 5px #cbced1, inset -2px -2px 5px #ffffff, 0 0 0 3px rgba(59, 130, 246, 0.3);
+            background-color: #ffffff;
+            transform: scale(1.01);
+        }
+
+        .scrolling-text {
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(to right, #fef3c7, #fde68a);
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .scrolling-text span {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 20s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+            transform: translateZ(20px);
+            animation: modalPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        @keyframes modalPopIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .image-gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .image-gallery img:hover {
+            transform: scale(1.05);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: #1e40af; /* Blue 800 */
+            position: relative;
+            display: inline-block;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 60%;
+            height: 4px;
+            background: linear-gradient(to right, #3b82f6, #1d4ed8);
+            border-radius: 2px;
+        }
+
+        .sidebar-menu {
+            background: linear-gradient(160deg, #1f2937, #111827);
+            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+        }
+        .sidebar-menu ul li a, .sidebar-menu ul li button {
+            transition: all 0.2s ease;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+        }
+        .sidebar-menu ul li a:hover, .sidebar-menu ul li button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        /* Header Enhancements */
+        header {
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            color: white;
+            border-radius: 0 0 2rem 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Wallet Cards */
+        #wallets-section .bg-white {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+        }
+        #wallets-section .border-l-4 {
+            border-left-width: 6px;
+        }
+
+        /* Product Cards */
+        #product-list .bg-white, #product-list-dashboard .bg-white {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+        }
+
+        /* Animations for elements appearing */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        .animate-fade-in-up.delay-1 { animation-delay: 0.1s; }
+        .animate-fade-in-up.delay-2 { animation-delay: 0.2s; }
+        .animate-fade-in-up.delay-3 { animation-delay: 0.3s; }
+        .animate-fade-in-up.delay-4 { animation-delay: 0.4s; }
+
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Modals -->
+    <div id="message-modal" class="modal-overlay">
+        <div class="modal-content text-center max-w-md">
+            <div class="text-blue-600 mb-4">
+                <i class="fas fa-bell text-4xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Notification</h3>
+            <p id="modal-message" class="text-gray-700 mb-6"></p>
+            <button onclick="hideModal()" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl font-bold hover:from-blue-600 hover:to-indigo-700 focus:outline-none shadow-lg transform transition duration-300 hover:scale-105 btn-3d">OK</button>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="modal-content text-center max-w-md">
+            <div class="text-yellow-500 mb-4">
+                <i class="fas fa-exclamation-triangle text-4xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Confirmation</h3>
+            <p id="confirm-modal-message" class="text-gray-700 mb-6"></p>
+            <div class="flex justify-center space-x-4">
+                <button id="confirm-yes-button" class="px-6 py-3 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl font-bold hover:from-red-600 hover:to-orange-600 focus:outline-none shadow-lg transform transition duration-300 hover:scale-105 btn-3d">Yes</button>
+                <button id="confirm-no-button" class="px-6 py-3 bg-gradient-to-r from-gray-400 to-gray-600 text-white rounded-xl font-bold hover:from-gray-500 hover:to-gray-700 focus:outline-none shadow-lg transform transition duration-300 hover:scale-105 btn-3d">No</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-profile-modal" class="modal-overlay">
+        <div id="admin-profile-content" class="modal-content max-w-2xl">
+        </div>
+    </div>
+
+    <div id="product-detail-modal" class="modal-overlay">
+        <div id="product-detail-content" class="modal-content max-w-3xl">
+        </div>
+    </div>
+
+    <div id="buy-product-modal" class="modal-overlay">
+        <div class="modal-content max-w-md">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-2xl font-bold text-blue-700">Buy Product</h3>
+                <button onclick="hideBuyProductModal()" class="text-gray-500 hover:text-gray-700 bg-gray-200 rounded-full p-2 transition duration-300">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="buy-product-content">
+                <p id="buy-product-message" class="mb-4 text-gray-700"></p>
+                <input type="number" id="buy-product-amount" placeholder="Enter Amount" class="w-full px-4 py-3 mb-6 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 input-3d">
+                <button onclick="submitProductRequest()" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 transition duration-300 shadow-lg transform transition duration-300 hover:scale-[1.02] btn-3d">Submit Request</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-chat-modal" class="modal-overlay">
+        <div class="modal-content max-w-2xl flex flex-col h-[80vh]">
+            <div class="flex items-center justify-between mb-4 pb-2 border-b">
+                <h3 class="text-2xl font-bold text-blue-700">Chat with <span id="admin-chat-user-name" class="text-indigo-600"></span></h3>
+                <button onclick="hideAdminChatModal()" class="text-gray-500 hover:text-gray-700 bg-gray-200 rounded-full p-2 transition duration-300">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div id="admin-chat-messages" class="flex-grow overflow-y-auto mb-4 p-4 bg-gray-50 rounded-xl space-y-4 shadow-inner"></div>
+            <div class="flex">
+                <input type="text" id="admin-chat-input" placeholder="Write a reply..." class="flex-grow px-4 py-3 rounded-l-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 input-3d">
+                <button onclick="sendAdminReply()" class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-r-xl hover:from-blue-600 hover:to-indigo-700 transition duration-300 shadow-lg transform transition duration-300 hover:scale-[1.02] btn-3d"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication Page -->
+    <div id="auth-page" class="flex flex-col items-center justify-center min-h-screen p-4">
+        <div class="bg-gradient-to-br from-white to-gray-100 p-10 rounded-3xl shadow-2xl w-full max-w-md card-3d animate-fade-in-up">
+            <div class="text-center mb-8">
+                <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white text-5xl w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                    <i class="fas fa-store"></i>
+                </div>
+                <h2 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-700">Affiliate Store</h2>
+                <p class="text-gray-500 mt-2">Join and Earn</p>
+            </div>
+            <div id="login-form">
+                <h3 class="text-2xl font-bold mb-6 text-center text-gray-800">Login</h3>
+                <input type="text" id="login-username" placeholder="Username" class="w-full px-5 py-4 mb-5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 input-3d">
+                <input type="password" id="login-password" placeholder="Password" class="w-full px-5 py-4 mb-6 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 input-3d">
+                <button onclick="handleLogin()" class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold py-4 rounded-xl hover:from-blue-600 hover:to-indigo-700 transition duration-300 shadow-lg transform transition duration-300 hover:scale-[1.02] btn-3d">Login</button>
+                <p class="mt-6 text-center">
+                    <a href="#" onclick="showSignupForm()" class="text-blue-600 hover:text-blue-800 font-medium hover:underline transition duration-300">Don't have an account? <span class="font-bold">Sign Up</span></a>
+                </p>
+            </div>
+            <div id="signup-form" class="hidden">
+                <h3 class="text-2xl font-bold mb-6 text-center text-gray-800">Sign Up</h3>
+                <input type="text" id="signup-name" placeholder="Name" class="w-full px-5 py-4 mb-4 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 input-3d">
+                <input type="password" id="signup-password" placeholder="Password" class="w-full px-5 py-4 mb-4 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 input-3d">
+                <input type="text" id="signup-reffer-code" placeholder="Referral Code (Optional)" class="w-full px-5 py-4 mb-6 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 input-3d">
+                <button onclick="handleSignup()" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-4 rounded-xl hover:from-green-600 hover:to-emerald-700 transition duration-300 shadow-lg transform transition duration-300 hover:scale-[1.02] btn-3d">Sign Up</button>
+                <p class="mt-6 text-center">
+                    <a href="#" onclick="showLoginForm()" class="text-blue-600 hover:text-blue-800 font-medium hover:underline transition duration-300">Already have an account? <span class="font-bold">Login</span></a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="hidden p-4 md:p-6">
+        <header class="mb-8 py-6 px-8 flex flex-col md:flex-row items-center justify-between sticky top-4 z-10 card-3d animate-fade-in-up">
+            <div class="flex items-center space-x-4">
+                 <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white text-3xl w-14 h-14 rounded-xl flex items-center justify-center shadow-md">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h1 class="text-3xl font-extrabold text-white">Admin Dashboard</h1>
+            </div>
+            <button onclick="handleLogout()" class="mt-4 md:mt-0 px-6 py-3 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl font-bold hover:from-red-600 hover:to-orange-600 transition duration-300 shadow-lg transform transition duration-300 hover:scale-[1.02] btn-3d">Logout</button>
+        </header>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="p-6 rounded-2xl card-3d animate-fade-in-up delay-1">
+                <h3 class="section-title">User Management</h3>
+                <div class="mb-6 pb-4 border-b">
+                    <h4 class="text-lg font-bold mb-3 text-gray-800">Register New User</h4>
+                    <input type="text" id="admin-signup-name" placeholder="Name" class="w-full px-4 py-3 mb-3 rounded-xl border input-3d">
+                    <input type="password" id="admin-signup-password" placeholder="Password" class="w-full px-4 py-3 mb-3 rounded-xl border input-3d">
+                    <input type="text" id="admin-signup-reffer-code" placeholder="Referral Code (Optional)" class="w-full px-4 py-3 mb-4 rounded-xl border input-3d">
+                    <button onclick="adminReferUser()" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 transition duration-300 shadow-lg transform transition duration-300 hover:scale-[1.02] btn-3d">Register User</button>
+                </div>
+                <div id="user-list" class="space-y-3 max-h-96 overflow-y-auto pr-2"></div>
+            </div>
+            <div class="p-6 rounded-2xl card-3d animate-fade-in-up delay-1">
+                <h3 class="section-title">Withdrawal Requests</h3>
+                <div id="withdrawal-requests" class="space-y-3 max-h-96 overflow-y-auto pr-2"></div>
+            </div>
+            <div class="p-6 rounded-2xl card-3d animate-fade-in-up delay-1">
+                <h3 class="section-title">Order Requests</h3>
+                <div id="order-requests" class="space-y-3 max-h-96 overflow-y-auto pr-2"></div>
+            </div>
+            <div class="p-6 rounded-2xl card-3d animate-fade-in-up delay-2">
+                <h3 class="section-title">Income Distribution</h3>
+                <div class="space-y-4 mb-4">
+                    <input type="number" id="incomeAmount" placeholder="Enter Amount to Distribute" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 input-3d">
+                    <button id="distributeBtn" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-3 rounded-xl hover:from-green-600 hover:to-emerald-700 transition duration-300 shadow-lg transform transition duration-300 hover:scale-[1.02] btn-3d">Distribute Income</button>
+                </div>
+                <div id="uplineList" class="space-y-2">
+                </div>
+                <div id="incomeStatusMessage" class="mt-4 text-center font-medium text-gray-700"></div>
+            </div>
+            <div class="p-6 rounded-2xl card-3d animate-fade-in-up delay-2">
+                <h3 class="section-tit
